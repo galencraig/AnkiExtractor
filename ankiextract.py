@@ -1,13 +1,33 @@
 from PyPDF2 import PdfReader
 import genanki
 
+# Define MyClass
+class MyClass:
+    def __init__(self, extracted_text):
+        self.extracted_text = extracted_text
+    
+    @property
+    def my_property(self):
+        question_answer_pairs = []
+        lines = self.extracted_text.split("\n")
+        for line in lines:
+            if line.startswith("Question #"):
+                question = line
+            elif line.startswith("Correct Answer:"):
+                answer = line.split(":")[1].strip()
+                question_answer_pairs.append((question, answer))
+        return question_answer_pairs
+
+obj = MyClass(extracted_text)
+length = len(obj.my_property)
+
 # Function to extract text from PDF
 def extract_text_from_pdf(pdf_path):
     text = ""
     with open(pdf_path, "rb") as f:
         reader = PdfReader(f)
-        for page_num in range(len(pdf_reader.Pages)):
-            page = pdf_reader.getPage(page_num)
+        for page_num in range(len(reader.pages)):
+            page = reader.pages[page_num] 
             text += page.extractText()
     return text
 
@@ -33,8 +53,11 @@ def create_anki_deck(deck_name, card_list):
 # Main function
 def main():
     pdf_path = input("Enter the path of the PDF File: ") 
-    text = extract_text_from_pdf(pdf_path)
+    extracted_text = extract_text_from_pdf(pdf_path)
     card_list = []  # List to store tuples of (question, answer)
+    obj = MyClass(extracted_text)
+    question_answer_pairs = obj.my_property 
+    # Now you can use data_list to process the extracted data further
 
     # Split the text by lines
     lines = text.split("\n")
@@ -54,8 +77,7 @@ def main():
             answer = "".join(correct_answers)
             card_list.append((question, answer))
 
-    create_anki_deck("MyDeck", card_list)
-
+    create_anki_deck(input ("What would you like to name this deck? "), question_answer_pairs) 
 if __name__ == "__main__":
     main()
 
