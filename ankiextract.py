@@ -1,5 +1,6 @@
 import genanki
 import fitz
+import random
 
 # Define MyClass
 class MyClass:
